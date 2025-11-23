@@ -51,7 +51,7 @@ public class RegistrationController {
         // TODO Form validation + UI errors.
         final CreatePersonResult createPersonResult = this.personService.createPerson(createPersonRequest);
         if (createPersonResult.created()) {
-            return "redirect:/login"; // registration successful - redirect to login form (not yet ready)
+            return "redirect:/login";
         }
         model.addAttribute("createPersonRequest", createPersonRequest); // Pass the same form data.
         model.addAttribute("errorMessage", createPersonResult.reason()); // Show an error message!

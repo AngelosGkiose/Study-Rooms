@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
-    Optional<Person> findByIdentifier(final String huaId);
+    Optional<Person> findByIdentifier(final String identifier);
 
     Optional<Person> findByEmailAddressIgnoreCase(final String emailAddress);
 
@@ -24,5 +24,5 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     boolean existsByMobilePhoneNumber(final String mobilePhoneNumber);
 
-    boolean existsByIdentifierIgnoreCase(final String huaId);
+    boolean existsByIdentifierIgnoreCase(final String identifier);
 }
