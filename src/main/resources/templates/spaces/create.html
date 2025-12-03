@@ -1,0 +1,68 @@
+<!--
+Author: Sotirios Ilias
+Student ID: it21925
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Study Space</title>
+    <style>
+        .oh-row { margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+<h1>Create Study Space</h1>
+
+<form th:action="@{/spaces/create}" th:object="${space}" method="post">
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" /><br/><br/>
+
+    <label>Capacity:</label>
+    <input type="number" th:field="*{capacity}" min="1" /><br/><br/>
+
+    <h3>Opening Hours</h3>
+
+    <!-- Container for dynamic rows -->
+    <div id="ohContainer"></div>
+
+    <!-- Hidden template row -->
+    <div id="ohTemplate" style="display:none;">
+        <div class="oh-row">
+            <select name="oh_day__INDEX__">
+                <option th:each="d : ${days}" th:value="${d}" th:text="${d}"></option>
+            </select>
+            <input type="time" name="oh_open__INDEX__" />
+            <input type="time" name="oh_close__INDEX__" />
+            <button type="button" onclick="this.parentElement.remove()">Remove</button>
+        </div>
+    </div>
+
+    <button type="button" onclick="addRow()">Add Opening Hour</button><br/><br/>
+
+    <button type="submit">Create</button>
+    <a th:href="@{/spaces}">Cancel</a>
+
+</form>
+
+<script>
+    let rowIndex = document.getElementById('ohContainer').children.length;
+
+    function addRow() {
+        const container = document.getElementById('ohContainer');
+        const template = document.getElementById('ohTemplate').innerHTML;
+
+        // Replace __INDEX__ with unique row number
+        const newRowHtml = template.replace(/__INDEX__/g, rowIndex);
+
+        // Append row to container
+        container.insertAdjacentHTML('beforeend', newRowHtml);
+
+        rowIndex++;
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!--
+Author: Sotirios Ilias
+Student ID: it21925
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Study Space</title>
+    <style>
+        .oh-row { margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+<h1>Edit Study Space</h1>
+
+<form th:action="@{|/spaces/edit/${space.id}|}" th:object="${space}" method="post">
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" /><br/><br/>
+
+    <label>Capacity:</label>
+    <input type="number" th:field="*{capacity}" min="1" /><br/><br/>
+
+    <h3>Opening Hours</h3>
+
+    <!-- Container for dynamic rows -->
+    <div id="ohContainer">
+        <div th:each="oh,iter : ${space.openingHours}" class="oh-row">
+            <select th:name="${'oh_day_' + iter.index}">
+                <option th:each="d : ${days}" th:value="${d}" th:text="${d}"
+                        th:selected="${d == oh.dayOfWeek}"></option>
+            </select>
+            <input type="time" th:name="${'oh_open_' + iter.index}" th:value="${oh.openTime}" />
+            <input type="time" th:name="${'oh_close_' + iter.index}" th:value="${oh.closeTime}" />
+            <button type="button" onclick="this.parentElement.remove()">Remove</button>
+        </div>
+    </div>
+
+    <!-- Hidden template row -->
+    <div id="ohTemplate" style="display:none;">
+        <div class="oh-row">
+            <select name="oh_day__INDEX__">
+                <option th:each="d : ${days}" th:value="${d}" th:text="${d}"></option>
+            </select>
+            <input type="time" name="oh_open__INDEX__" required />
+            <input type="time" name="oh_close__INDEX__" required />
+            <button type="button" onclick="this.parentElement.remove()">Remove</button>
+        </div>
+    </div>
+
+    <button type="button" onclick="addRow()">Add Opening Hour</button><br/><br/>
+
+    <button type="submit">Save Changes</button>
+    <a th:href="@{/spaces}">Cancel</a>
+
+</form>
+
+<script>
+    let rowIndex = document.getElementById('ohContainer').children.length;
+
+    function addRow() {
+        const container = document.getElementById('ohContainer');
+        const template = document.getElementById('ohTemplate').innerHTML;
+
+        const newRowHtml = template.replace(/__INDEX__/g, rowIndex);
+        container.insertAdjacentHTML('beforeend', newRowHtml);
+
+        rowIndex++;
+    }
+</script>
+
+</body>
+</html>

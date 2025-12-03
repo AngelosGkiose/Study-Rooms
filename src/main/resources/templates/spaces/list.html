@@ -1,0 +1,38 @@
+<!--
+Author: Sotirios Ilias
+Student ID: it21925
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Study Spaces</title>
+</head>
+<body>
+<h1>Study Spaces</h1>
+<a th:href="@{/spaces/create}">Create new space</a>
+<table border="1">
+    <thead>
+    <tr><th>Name</th><th>Capacity</th><th>Opening Hours</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="s : ${spaces}">
+        <td th:text="${s.name}">Name</td>
+        <td th:text="${s.capacity}">0</td>
+        <td>
+            <ul>
+                <li th:each="oh : ${s.openingHours}"
+                    th:text="${#strings.capitalize(oh.dayOfWeek.name().toLowerCase()) + ': ' + oh.openTime + ' - ' + oh.closeTime}">Mon: 08:00-20:00</li>
+            </ul>
+        </td>
+        <td>
+            <a th:href="@{|/spaces/edit/${s.id}|}">Edit</a>
+            <form th:action="@{|/spaces/delete/${s.id}|}" method="post" style="display:inline">
+                <button type="submit" onclick="return confirm('Delete?')">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
