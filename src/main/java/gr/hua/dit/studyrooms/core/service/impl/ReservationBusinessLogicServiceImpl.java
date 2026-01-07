@@ -1,18 +1,18 @@
 package gr.hua.dit.studyrooms.core.service.impl;
 
 import gr.hua.dit.studyrooms.core.model.*;
+import gr.hua.dit.studyrooms.core.port.HolidayPort;
 import gr.hua.dit.studyrooms.core.repository.PersonRepository;
 import gr.hua.dit.studyrooms.core.repository.ReservationRepository;
 import gr.hua.dit.studyrooms.core.repository.StudyRoomRepository;
 import gr.hua.dit.studyrooms.core.security.CurrentUser;
 import gr.hua.dit.studyrooms.core.model.ReservationStatus;
 import gr.hua.dit.studyrooms.core.security.CurrentUserProvider;
-import gr.hua.dit.studyrooms.core.service.ReservationService;
+import gr.hua.dit.studyrooms.core.service.ReservationBusinessLogicService;
 import gr.hua.dit.studyrooms.core.service.mapper.ReservationMapper;
 import gr.hua.dit.studyrooms.core.service.model.CancelReservationRequest;
 import gr.hua.dit.studyrooms.core.service.model.CreateReservationRequest;
 import gr.hua.dit.studyrooms.core.service.model.ReservationView;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +21,11 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class ReservationServiceImpl implements ReservationService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReservationServiceImpl.class);
+public class ReservationBusinessLogicServiceImpl implements ReservationBusinessLogicService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReservationBusinessLogicServiceImpl.class);
 
     private static final int MAX_RESERVATIONS_PER_DAY = 4;
     private static final Set<ReservationStatus> ACTIVE = Set.of(ReservationStatus.ACTIVE);
@@ -35,25 +34,30 @@ public class ReservationServiceImpl implements ReservationService {
     private final PersonRepository personRepository;
     private final StudyRoomRepository studyRoomRepository;
     private final CurrentUserProvider currentUserProvider;
+    private final HolidayPort holidayPort;
 
-    public ReservationServiceImpl(
+
+    public ReservationBusinessLogicServiceImpl(
             final ReservationMapper reservationMapper,
             final ReservationRepository reservationRepository,
             final CurrentUserProvider currentUserProvider,
             PersonRepository personRepository,
-            StudyRoomRepository studyRoomRepository
+            StudyRoomRepository studyRoomRepository,
+            HolidayPort holidayPort
     ) {
         if (reservationMapper == null) throw new NullPointerException();
         if (reservationRepository == null) throw new NullPointerException();
         if (personRepository == null) throw new NullPointerException();
         if (currentUserProvider == null) throw new NullPointerException();
         if (studyRoomRepository == null) throw new NullPointerException();
+        if (holidayPort == null) throw new NullPointerException();
 
         this.reservationMapper = reservationMapper;
         this.reservationRepository = reservationRepository;
         this.personRepository = personRepository;
         this.currentUserProvider = currentUserProvider;
         this.studyRoomRepository = studyRoomRepository;
+        this.holidayPort = holidayPort;
     }
 
     @Override
@@ -102,70 +106,102 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Transactional
     @Override
-    public ReservationView bookReservation(CreateReservationRequest req) {
+    public ReservationView createReservation(final CreateReservationRequest req) {
         if (req == null) throw new NullPointerException();
+
+        // --------------------------------------------------
+        // Security
+        // --------------------------------------------------
+
         final CurrentUser currentUser = this.currentUserProvider.requireCurrentUser();
         if (currentUser.type() != PersonType.STUDENT) {
-            throw new SecurityException("Student type required");
+            throw new SecurityException("Student type/role required");
         }
 
         final long studentId = currentUser.id();
-        final long roomId = req.roomId();
         final LocalDate date = req.date();
-        LocalDate today = LocalDate.now();
 
-        final Person student = this.personRepository.findById(studentId)
-                .orElseThrow(() -> new IllegalArgumentException("Authenticated student  not found"));
-
-        if (student == null || student.getType() != PersonType.STUDENT) {
-            throw new IllegalArgumentException("studentId must refer to a STUDENT");
-        }
-
-        final StudyRoom room = studyRoomRepository.findById(req.roomId())
-                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
-        // Security
-        // --------------------------------------------------
-        if (date.isBefore(today)) {
+        if (date.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Reservation date must be today or later");
         }
 
-        // RULE 1: max 4 per day
-        final long activeCount = this.reservationRepository.countByStudentIdAndDateAndStatusIn(studentId,date, ACTIVE);
-        if (activeCount >= MAX_RESERVATIONS_PER_DAY ) {
-            throw new RuntimeException("You already have 4 reservations on this date.");
-        }
-        List<Reservation> activeReservations =
-                reservationRepository.findByRoomIdAndDateAndStatus(
-                        roomId, date, ReservationStatus.ACTIVE
-                );
+        // --------------------------------------------------
+        // Domain
+        // --------------------------------------------------
 
-        int seatsAlreadyBooked = activeReservations.stream()
+        final Person student = this.personRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("student not found"));
+
+        if (student.getType() != PersonType.STUDENT) {
+            throw new IllegalArgumentException("studentId must refer to a STUDENT");
+        }
+
+        final StudyRoom room = this.studyRoomRepository.findById(req.roomId())
+                .orElseThrow(() -> new IllegalArgumentException("room not found"));
+
+        // --------------------------------------------------
+        // External rule: holidays
+        // --------------------------------------------------
+
+        if (holidayPort.isHoliday(date)) {
+            throw new RuntimeException("Reservations are not allowed on public holidays");
+        }
+
+        // --------------------------------------------------
+        // Business rules
+        // --------------------------------------------------
+
+        // --------------------------------------------------
+        // Penalty rule
+        // --------------------------------------------------
+
+        if (student.isUnderPenalty()) {
+            throw new RuntimeException(
+                    "You cannot make a reservation due to an active penalty"
+            );
+        }
+        final long activeCount =
+                this.reservationRepository.countByStudentIdAndDateAndStatusIn(
+                        studentId, date, ACTIVE);
+
+        if (activeCount >= MAX_RESERVATIONS_PER_DAY) {
+            throw new RuntimeException("Student has reached the daily reservation limit");
+        }
+
+        final List<Reservation> activeReservations =
+                this.reservationRepository.findByRoomIdAndDateAndStatus(
+                        room.getId(), date, ReservationStatus.ACTIVE);
+
+        final int seatsBooked = activeReservations.stream()
                 .mapToInt(Reservation::getSeatsReserved)
                 .sum();
 
-        if (seatsAlreadyBooked + req.seatsRequested() > room.getCapacity()) {
-            throw new IllegalStateException("Not enough seats available.");
+        if (seatsBooked + req.seatsRequested() > room.getCapacity()) {
+            throw new RuntimeException("Not enough seats available");
         }
 
-        // Rule 3: cannot book outside room hours
         if (room.getOpeningTime() == null || room.getClosingTime() == null) {
-            throw new RuntimeException("This room has no valid opening/closing hours");
+            throw new RuntimeException("Room has no valid opening/closing hours");
         }
 
-        // Create reservation
-        Reservation r = new Reservation();
-                r.setStudent(student);
-                r.setRoom(room);
-                r.setDate(date);
-                r.setStartTime(room.getOpeningTime());
-                r.setEndTime(room.getClosingTime());
-                r.setStatus(ReservationStatus.ACTIVE);
-                r.setSeatsReserved(req.seatsRequested());
-        r = this.reservationRepository.save(r);
+        // --------------------------------------------------
+        // Create
+        // --------------------------------------------------
 
-        final ReservationView reservationView = this.reservationMapper.convertReservationToReservationView(r);
-        return reservationView;
+        Reservation reservation = new Reservation();
+        reservation.setStudent(student);
+        reservation.setRoom(room);
+        reservation.setDate(date);
+        reservation.setStartTime(room.getOpeningTime());
+        reservation.setEndTime(room.getClosingTime());
+        reservation.setSeatsReserved(req.seatsRequested());
+        reservation.setStatus(ReservationStatus.ACTIVE);
+
+        reservation = this.reservationRepository.save(reservation);
+
+        return this.reservationMapper.convertReservationToReservationView(reservation);
     }
+
 
 
     @Override

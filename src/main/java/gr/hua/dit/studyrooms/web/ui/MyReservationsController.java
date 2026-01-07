@@ -1,7 +1,6 @@
 package gr.hua.dit.studyrooms.web.ui;
 
-import gr.hua.dit.studyrooms.core.security.CurrentUserProvider;
-import gr.hua.dit.studyrooms.core.service.ReservationService;
+import gr.hua.dit.studyrooms.core.service.ReservationBusinessLogicService;
 import gr.hua.dit.studyrooms.core.service.model.CancelReservationRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/rooms")
 public class MyReservationsController {
 
-    private final ReservationService reservationService;
+    private final ReservationBusinessLogicService reservationBusinessLogicService;
 
-    public MyReservationsController(ReservationService reservationService) {
-        this.reservationService = reservationService;
+    public MyReservationsController(ReservationBusinessLogicService reservationBusinessLogicService) {
+        this.reservationBusinessLogicService = reservationBusinessLogicService;
     }
     @GetMapping("/reservations/my")
     public String myReservations(Model model) {
 
-        var reservations = reservationService.getReservationsOfCurrentUser();
+        var reservations = reservationBusinessLogicService.getReservationsOfCurrentUser();
 
         model.addAttribute("reservations", reservations);
 
@@ -33,7 +32,7 @@ public class MyReservationsController {
     @PostMapping("/reservations/cancel")
     public String cancelReservation(@RequestParam long reservationId, Model model) {
 
-        var view = reservationService.cancelReservation(new CancelReservationRequest(reservationId));
+        var view = reservationBusinessLogicService.cancelReservation(new CancelReservationRequest(reservationId));
 
         model.addAttribute("reservation", view);
 
@@ -42,7 +41,7 @@ public class MyReservationsController {
     @GetMapping("/reservations/history")
     public String history(Model model) {
 
-        var history = reservationService.getReservationHistoryOfCurrentUser();
+        var history = reservationBusinessLogicService.getReservationHistoryOfCurrentUser();
 
         model.addAttribute("history", history);
 

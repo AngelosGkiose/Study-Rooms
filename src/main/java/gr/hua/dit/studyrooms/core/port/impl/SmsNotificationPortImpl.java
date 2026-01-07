@@ -22,7 +22,7 @@ public class SmsNotificationPortImpl implements SmsNotificationPort {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SmsNotificationPortImpl.class);
 
-    private static final boolean ACTIVE = true; // @future Get from application properties.
+    private static final boolean ACTIVE = false; // @future Get from application properties.
 
     private final RestTemplate restTemplate;
 

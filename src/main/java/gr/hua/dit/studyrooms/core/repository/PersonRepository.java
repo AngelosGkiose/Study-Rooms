@@ -1,11 +1,9 @@
 package gr.hua.dit.studyrooms.core.repository;
 
 import gr.hua.dit.studyrooms.core.model.Person;
-import gr.hua.dit.studyrooms.core.model.PersonType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 /**

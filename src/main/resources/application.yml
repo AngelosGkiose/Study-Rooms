@@ -1,4 +1,5 @@
-# application.yml (or application-dev.yml if you use profiles)
+# application.yml
+
 spring:
   application:
     name: Study Rooms
@@ -14,13 +15,28 @@ spring:
       ddl-auto: create-drop   # dev only
     open-in-view: false
     properties:
-      hibernate.dialect: org.hibernate.dialect.H2Dialect
-      hibernate.format_sql: true
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
 
-      server:
-        error:
-          whitelabel:
-            enabled: false
-          include-message: always
-          include-binding-errors: always
-          include-exception: true
+server:
+  error:
+    whitelabel:
+      enabled: false
+    include-message: always
+    include-binding-errors: always
+    include-exception: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+# Custom application properties
+app:
+  jwt:
+    issuer: study-rooms-api
+    audience: external-systems
+    secret: "${JWT_SECRET:Uh0WvRj5qs2sChP0dwTkky/VoudWSk0FVikEDDUKdRU=}"
+    ttl-minutes: 60

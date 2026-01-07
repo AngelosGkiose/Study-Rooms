@@ -96,14 +96,6 @@ public class StudyRoomServiceImpl implements StudyRoomService {
     }
 
     @Override
-    public List<StudyRoomView> getAllRooms() {
-        return studyRoomRepository.findAll()
-                .stream()
-                .map(studyRoomMapper::convertStudyRoomToStudyRoomView)
-                .toList();
-    }
-
-    @Override
     public CreateStudyRoomResult createStudyRoom(final CreateStudyRoomRequest createStudyRoomRequest,
                                                  final boolean notify) {
         if (createStudyRoomRequest == null) throw new NullPointerException();

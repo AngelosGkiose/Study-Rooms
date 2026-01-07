@@ -6,7 +6,7 @@ import gr.hua.dit.studyrooms.core.port.PhoneNumberPort;
 import gr.hua.dit.studyrooms.core.port.SmsNotificationPort;
 import gr.hua.dit.studyrooms.core.port.impl.dto.PhoneNumberValidationResult;
 import gr.hua.dit.studyrooms.core.repository.PersonRepository;
-import gr.hua.dit.studyrooms.core.service.PersonService;
+import gr.hua.dit.studyrooms.core.service.PersonBusinessLogicService;
 import gr.hua.dit.studyrooms.core.service.mapper.PersonMapper;
 import gr.hua.dit.studyrooms.core.service.model.CreatePersonRequest;
 import gr.hua.dit.studyrooms.core.service.model.CreatePersonResult;
@@ -22,11 +22,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Set;
 
 /**
- * Default implementation of {@link PersonService}.
+ * Default implementation of {@link PersonBusinessLogicService}.
  */
 @Service
-public class PersonServiceImpl implements PersonService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PersonServiceImpl.class);
+public class PersonBusinessLogicServiceImpl implements PersonBusinessLogicService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PersonBusinessLogicServiceImpl.class);
     private final Validator validator;
     private final PasswordEncoder passwordEncoder;
     private final PersonRepository personRepository;
@@ -34,9 +34,9 @@ public class PersonServiceImpl implements PersonService {
     private final SmsNotificationPort smsNotificationPort;
     private final PhoneNumberPort phoneNumberPort;
 
-    public PersonServiceImpl(final Validator validator,final PasswordEncoder passwordEncoder,final PersonRepository personRepository,
-                             final PersonMapper personMapper,
-                             final SmsNotificationPort smsNotificationPort,final PhoneNumberPort phoneNumberPort) {
+    public PersonBusinessLogicServiceImpl(final Validator validator, final PasswordEncoder passwordEncoder, final PersonRepository personRepository,
+                                          final PersonMapper personMapper,
+                                          final SmsNotificationPort smsNotificationPort, final PhoneNumberPort phoneNumberPort) {
         if (validator == null) throw new NullPointerException();
         if (passwordEncoder == null) throw new NullPointerException();
         if (personRepository == null) throw new NullPointerException();

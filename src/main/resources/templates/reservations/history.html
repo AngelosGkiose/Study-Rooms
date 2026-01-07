@@ -39,6 +39,8 @@
                       class="badge text-bg-danger">Ακυρωμένη</span>
                 <span th:if="${r.status.name() == 'CANCELLED_BY_STAFF'}"
                       class="badge text-bg-danger">Ακυρωμένη από το Προσωπικό</span>
+                <span th:if="${r.status.name() == 'NO_SHOW'}"
+                      class="badge text-bg-danger">Δεν εμφανίστηκε</span>
             </td>
         </tr>
         </tbody>

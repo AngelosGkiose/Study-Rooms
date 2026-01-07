@@ -82,6 +82,9 @@ public class Person {
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
+    @Column(name = "penalty_until")
+    private Instant penaltyUntil;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -97,6 +100,7 @@ public class Person {
                   String emailAddress,
                   PersonType type,
                   String passwordHash,
+                  Instant penaltyUntil,
                   Instant createdAt) {
         this.id = id;
         this.studentId = studentId;
@@ -107,6 +111,7 @@ public class Person {
         this.type = type;
         this.passwordHash = passwordHash;
         this.createdAt = createdAt;
+        this.penaltyUntil=penaltyUntil;
     }
 
     public Long getId() {
@@ -156,6 +161,20 @@ public class Person {
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
+
+    public Instant getPenaltyUntil() {
+        return penaltyUntil;
+    }
+    public void applyPenalty(final Instant until) {
+        if (until == null) throw new NullPointerException();
+        this.penaltyUntil = until;
+    }
+
+    public boolean isUnderPenalty() {
+        return penaltyUntil != null && Instant.now().isBefore(penaltyUntil);
+    }
+
+    public void setPenaltyUntil(Instant penaltyUntil) {this.penaltyUntil = penaltyUntil;}
 
     public PersonType getType() {
         return type;

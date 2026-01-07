@@ -19,12 +19,6 @@ public class StudyRoomAvailabilityController {
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("/room/calendar")
     public String showAvailabilityCalendar(Model model) {
-
-        LocalDate today = LocalDate.now();
-
-        model.addAttribute("date", today);
-        model.addAttribute("rooms", availabilityService.getAvailabilityForDate(today));
-
         return "room/calendar";
     }
 }

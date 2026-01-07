@@ -17,8 +17,6 @@ public interface StudyRoomService {
     default CreateStudyRoomResult createStudyRoom(final CreateStudyRoomRequest createStudyRoomRequest) {
         return this.createStudyRoom(createStudyRoomRequest, true);
     }
-    List<StudyRoomView> getAllRooms();
-
     UpdateStudyRoomResult updateStudyRoom(Long id, UpdateStudyRoomRequest request, boolean notify);
 
     default UpdateStudyRoomResult updateStudyRoom(Long id, UpdateStudyRoomRequest request) {

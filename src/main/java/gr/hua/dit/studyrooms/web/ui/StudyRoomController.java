@@ -1,5 +1,6 @@
 package gr.hua.dit.studyrooms.web.ui;
 
+import gr.hua.dit.studyrooms.core.service.StudyRoomDataService;
 import gr.hua.dit.studyrooms.core.service.StudyRoomService;
 import gr.hua.dit.studyrooms.core.service.model.CreateStudyRoomRequest;
 import gr.hua.dit.studyrooms.core.service.model.CreateStudyRoomResult;
@@ -17,11 +18,14 @@ public class StudyRoomController {
 
     private final StudyRoomService studyRoomService;
     private final StudyRoomRepository studyRoomRepository;
+    private final StudyRoomDataService studyRoomDataService;
 
-    public StudyRoomController(final StudyRoomRepository studyRoomRepository,final StudyRoomService studyRoomService) {
+    public StudyRoomController(final StudyRoomRepository studyRoomRepository,final StudyRoomService studyRoomService,final StudyRoomDataService studyRoomDataService) {
         if (studyRoomService == null) throw new NullPointerException();
+        if (studyRoomDataService == null) throw new NullPointerException();
         this.studyRoomService = studyRoomService;
         this.studyRoomRepository = studyRoomRepository;
+        this.studyRoomDataService = studyRoomDataService;
     }
 
     /** GET → Show creation form */
@@ -59,7 +63,7 @@ public class StudyRoomController {
                             @RequestParam(required = false) String created,
                             Model model) {
 
-        model.addAttribute("rooms", studyRoomService.getAllRooms());
+        model.addAttribute("rooms", studyRoomDataService.getAllRooms());
 
         if (updated != null) {
             model.addAttribute("successMessage", "Το δωμάτιο ενημερώθηκε με επιτυχία!");

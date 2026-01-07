@@ -6,7 +6,7 @@ import gr.hua.dit.studyrooms.core.service.model.CreatePersonResult;
 /**
  * Service for managing {@link gr.hua.dit.studyrooms.core.model.Person}.
  */
-public interface PersonService {
+public interface PersonBusinessLogicService {
 
     CreatePersonResult createPerson(final CreatePersonRequest createPersonRequest, final boolean notify);
 

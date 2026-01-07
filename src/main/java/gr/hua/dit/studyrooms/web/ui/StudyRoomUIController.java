@@ -2,7 +2,7 @@ package gr.hua.dit.studyrooms.web.ui;
 
 import gr.hua.dit.studyrooms.core.repository.StudyRoomRepository;
 import gr.hua.dit.studyrooms.core.security.CurrentUserProvider;
-import gr.hua.dit.studyrooms.core.service.ReservationService;
+import gr.hua.dit.studyrooms.core.service.ReservationBusinessLogicService;
 import gr.hua.dit.studyrooms.core.service.model.CreateReservationRequest;
 import gr.hua.dit.studyrooms.core.service.model.ReservationView;
 import gr.hua.dit.studyrooms.web.ui.model.ReservationForm;
@@ -20,16 +20,16 @@ import java.time.LocalDate;
 @RequestMapping("/rooms")
 public class StudyRoomUIController {
 
-    private final ReservationService reservationService;
+    private final ReservationBusinessLogicService reservationBusinessLogicService;
     private final CurrentUserProvider currentUserProvider;
     private final StudyRoomRepository roomRepo;
 
     public StudyRoomUIController(
-            ReservationService reservationService,
+            ReservationBusinessLogicService reservationBusinessLogicService,
             CurrentUserProvider currentUserProvider,
             StudyRoomRepository roomRepo
     ) {
-        this.reservationService = reservationService;
+        this.reservationBusinessLogicService = reservationBusinessLogicService;
         this.currentUserProvider = currentUserProvider;
         this.roomRepo = roomRepo;
     }
@@ -71,7 +71,7 @@ public class StudyRoomUIController {
                 form.getSeatsRequested()
         );
 
-        ReservationView view = reservationService.bookReservation(req);
+        ReservationView view = reservationBusinessLogicService.createReservation(req);
 
         model.addAttribute("reservation", view);
         return "reservations/reservation_success";

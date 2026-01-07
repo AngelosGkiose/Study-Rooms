@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Στατιστικά Πληρότητας</title>
+
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"/>
+</head>
+
+<body class="container mt-4">
+
+<h2>Στατιστικά Πληρότητας Δωματίων</h2>
+
+<form method="get" th:action="@{/staff/stats/rooms}">
+    <label>Ημερομηνία:</label>
+    <input type="date" name="date"
+           th:value="${selectedDate}">
+    <button class="btn btn-dark">Προβολή</button>
+</form>
+
+
+<!-- Πίνακας στατιστικών -->
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Δωμάτιο</th>
+        <th>Χωρητικότητα</th>
+        <th>Κρατημένες</th>
+        <th>Διαθέσιμες</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="r : ${stats}">
+        <td th:text="${r.roomName}"></td>
+        <td th:text="${r.capacity}"></td>
+        <td th:text="${r.booked}"></td>
+        <td th:text="${r.available}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/staff/dashboard" class="btn btn-secondary">
+    Επιστροφή
+</a>
+
+</body>
+</html>

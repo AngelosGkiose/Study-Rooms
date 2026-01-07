@@ -1,9 +1,11 @@
 package gr.hua.dit.studyrooms.core.service.model;
 
+import gr.hua.dit.studyrooms.core.service.impl.PersonBusinessLogicServiceImpl;
+
 /**
  * CreatePersonResult DTO.
  *
- * @see gr.hua.dit.studyrooms.core.service.impl.PersonServiceImpl#createPerson(CreatePersonRequest)
+ * @see PersonBusinessLogicServiceImpl#createPerson(CreatePersonRequest)
  */
 public record CreatePersonResult(
         boolean created,

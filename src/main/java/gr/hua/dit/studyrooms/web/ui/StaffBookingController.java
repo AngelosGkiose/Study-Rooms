@@ -1,6 +1,6 @@
 package gr.hua.dit.studyrooms.web.ui;
 
-import gr.hua.dit.studyrooms.core.service.ReservationService;
+import gr.hua.dit.studyrooms.core.service.ReservationBusinessLogicService;
 import gr.hua.dit.studyrooms.core.service.model.CancelReservationRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/bookings")
 public class StaffBookingController {
 
-    private final ReservationService reservationService;
+    private final ReservationBusinessLogicService reservationBusinessLogicService;
 
-    public StaffBookingController(ReservationService reservationService) {
-        this.reservationService = reservationService;
+    public StaffBookingController(ReservationBusinessLogicService reservationBusinessLogicService) {
+        this.reservationBusinessLogicService = reservationBusinessLogicService;
     }
 
     @PreAuthorize("hasRole('STAFF')")
@@ -22,7 +22,7 @@ public class StaffBookingController {
     public String manageBookings(Model model) {
 
         // όλες οι ACTIVE κρατήσεις για ακύρωση από staff
-        var reservations = reservationService.getAllActiveReservationsForStaff();
+        var reservations = reservationBusinessLogicService.getAllActiveReservationsForStaff();
 
         model.addAttribute("reservations", reservations);
 
@@ -33,7 +33,7 @@ public class StaffBookingController {
     @PostMapping("/cancel")
     public String cancelByStaff(@RequestParam long reservationId, Model model) {
 
-        var view = reservationService.cancelReservationByStaff(new CancelReservationRequest(reservationId));
+        var view = reservationBusinessLogicService.cancelReservationByStaff(new CancelReservationRequest(reservationId));
 
         model.addAttribute("reservation", view);
 
