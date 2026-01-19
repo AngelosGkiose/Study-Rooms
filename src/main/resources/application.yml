@@ -19,7 +19,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop   # dev only
+      ddl-auto: update   # dev only
     open-in-view: false
     properties:
       hibernate:
