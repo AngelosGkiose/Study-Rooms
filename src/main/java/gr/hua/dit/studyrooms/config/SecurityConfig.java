@@ -88,9 +88,6 @@ public class SecurityConfig {
                             boolean isStaff = authentication.getAuthorities()
                                     .stream()
                                     .anyMatch(a -> a.getAuthority().equals("ROLE_STAFF"));
-                            authentication.getAuthorities()
-                                    .forEach(a -> System.out.println("AUTHORITY = " + a.getAuthority()));
-
                             if (isStaff) {
                                 response.sendRedirect("/staff/dashboard");
                             } else {

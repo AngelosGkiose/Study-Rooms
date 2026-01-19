@@ -7,7 +7,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-
+/**
+ * Reservation entity.
+ */
 @Entity
 @Table(
         name = "reservation",

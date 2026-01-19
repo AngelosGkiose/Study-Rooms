@@ -4,11 +4,18 @@ spring:
   application:
     name: Study Rooms
 
+
+
   datasource:
-    url: jdbc:h2:file:./LOCAL_DATA/h2/app;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
-    username: sa
-    password: changeme
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://localhost:5432/studyrooms_db
+    username: postgres
+    password: password123
+    driver-class-name: org.postgresql.Driver
+  #  datasource:
+  #    url: jdbc:h2:file:./LOCAL_DATA/h2/app;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+  #    username: sa
+  #    password: changeme
+  #    driver-class-name: org.h2.Driver
 
   jpa:
     hibernate:
@@ -16,7 +23,7 @@ spring:
     open-in-view: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 
 server:

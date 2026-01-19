@@ -166,6 +166,10 @@ public class ReservationBusinessLogicServiceImpl implements ReservationBusinessL
                 this.reservationRepository.countByStudentIdAndDateAndStatusIn(
                         studentId, date, ACTIVE);
 
+        // --------------------------------------------------
+        // Student cannot have more than 4 active Reservations per day
+        // --------------------------------------------------
+
         if (activeCount >= MAX_RESERVATIONS_PER_DAY) {
             throw new RuntimeException("Student has reached the daily reservation limit");
         }
