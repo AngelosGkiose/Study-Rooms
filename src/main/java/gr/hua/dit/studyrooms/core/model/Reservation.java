@@ -49,7 +49,7 @@ public class Reservation {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, length = 16)
+    @Column(name = "status", nullable = false, length = 30)
     private ReservationStatus status;
 
     @NotNull
