@@ -1,0 +1,12 @@
+2025-11-28 15:14:29.164672+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "hte_person" already exists; SQL statement:
+create global temporary table HTE_person(rn_ integer not null, created_at timestamp(6) with time zone, id bigint, mobile_phone_number varchar(18), identifier varchar(20), email_address varchar(100), first_name varchar(100), last_name varchar(100), password_hash varchar(255), type enum ('STAFF','STUDENT'), primary key (rn_)) TRANSACTIONAL [42101-232]
+2025-11-28 15:14:31.419287+02:00 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "hte_person" already exists; SQL statement:
+create global temporary table HTE_person(rn_ integer not null, created_at timestamp(6) with time zone, id bigint, mobile_phone_number varchar(18), identifier varchar(20), email_address varchar(100), first_name varchar(100), last_name varchar(100), password_hash varchar(255), type enum ('STAFF','STUDENT'), primary key (rn_)) TRANSACTIONAL [42101-232]
+2026-01-08 20:23:33.917715+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "hte_person" already exists; SQL statement:
+create global temporary table HTE_person(rn_ integer not null, created_at timestamp(6) with time zone, id bigint, mobile_phone_number varchar(18), identifier varchar(20), email_address varchar(100), first_name varchar(100), last_name varchar(100), password_hash varchar(255), type enum ('STAFF','STUDENT'), primary key (rn_)) TRANSACTIONAL [42101-232]
+2026-01-08 20:23:36.131890+02:00 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "hte_person" already exists; SQL statement:
+create global temporary table HTE_person(rn_ integer not null, created_at timestamp(6) with time zone, id bigint, mobile_phone_number varchar(18), identifier varchar(20), email_address varchar(100), first_name varchar(100), last_name varchar(100), password_hash varchar(255), type enum ('STAFF','STUDENT'), primary key (rn_)) TRANSACTIONAL [42101-232]

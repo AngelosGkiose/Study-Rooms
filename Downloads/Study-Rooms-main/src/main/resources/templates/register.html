@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Study Rooms – Registration</title>
+
+    <!-- BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <style>
+        body {
+            background: #f3f3f3;
+            font-family: Arial, sans-serif;
+        }
+
+        header h1 {
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .form-container {
+            margin: 40px auto;
+            max-width: 600px;
+            background: white;
+            padding: 25px;
+            border: 4px solid black;
+            box-shadow: 8px 8px 0px black;
+        }
+
+        .form-label {
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+            font-weight: bold;
+            color: #7c7c7c;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #6d6d6d;
+            border-radius: 0;
+        }
+
+        .btn-primary {
+            border-radius: 0;
+            background: black;
+            border: none;
+            padding: 10px 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="text-center p-4">
+    <h1>Study Rooms <small>/ Registration</small></h1>
+</header>
+
+<section>
+    <div class="form-container">
+
+        <!-- ERROR MESSAGE BLOCK -->
+        <div class="text-center mb-3" th:if="${errorMessage}">
+            <p class="text-danger fw-bold" th:text="${errorMessage}"></p>
+        </div>
+
+        <!-- REGISTRATION FORM -->
+        <form th:action="@{/register}" method="post" th:object="${createPersonRequest}">
+
+            <!-- TYPE -->
+            <div class="mb-3">
+                <label class="form-label">I am:</label>
+                <select th:field="*{type}" class="form-select">
+                    <option th:value="STUDENT">Student</option>
+                    <option th:value="STAFF">Library Staff</option>
+                </select>
+            </div>
+
+            <!-- IDENTIFIER -->
+            <div class="mb-3">
+                <label class="form-label">Identifier</label>
+                <input type="text" th:field="*{identifier}" class="form-control"
+                       placeholder="Example: it2023001" required>
+            </div>
+
+            <!-- FIRST NAME -->
+            <div class="mb-3">
+                <label class="form-label">First Name</label>
+                <input type="text" th:field="*{firstName}" class="form-control" required>
+            </div>
+
+            <!-- LAST NAME -->
+            <div class="mb-3">
+                <label class="form-label">Last Name</label>
+                <input type="text" th:field="*{lastName}" class="form-control" required>
+            </div>
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+                <label class="form-label">Email Address</label>
+                <input type="email" th:field="*{emailAddress}" class="form-control" required>
+            </div>
+
+            <!-- PHONE -->
+            <div class="mb-3">
+                <label class="form-label">Mobile Phone Number</label>
+                <input type="tel" th:field="*{mobilePhoneNumber}" class="form-control"
+                       placeholder="+30 69XXXXXXXX" required>
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" th:field="*{rawPassword}" class="form-control" required>
+            </div>
+
+            <!-- SUBMIT -->
+            <div class="mt-4 text-center">
+                <button class="btn btn-primary" type="submit">Register</button>
+            </div>
+
+            <p class="mt-3 text-center">
+                <a th:href="@{/login}">Already have an account? Sign In.</a>
+            </p>
+        </form>
+    </div>
+</section>
+
+</body>
+</html>

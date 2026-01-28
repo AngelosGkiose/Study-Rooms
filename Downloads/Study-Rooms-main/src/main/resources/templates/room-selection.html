@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+
+
+<head>
+
+    <title>Select Study Roomss</title>
+</head>
+
+
+<body>
+class="container mt-5">
+<header layout:fragment="header">
+    <h1>Select Your Study Room!</h1>
+</header>
+
+<section layout:fragment="main">
+
+<div class="row">
+    <div th:each="room : ${rooms}" class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${room}">Room Name</h5>
+                <button class="btn btn-primary">Book this Room</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

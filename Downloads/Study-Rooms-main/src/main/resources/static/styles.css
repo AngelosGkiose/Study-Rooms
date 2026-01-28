@@ -1,0 +1,139 @@
+
+    :root {
+        --primary: #1e3a8a;        /* deep blue */
+        --primary-light: #3b82f6;  /* soft blue */
+        --secondary: #14b8a6;      /* teal */
+        --accent: #f59e0b;         /* amber */
+        --danger: #ef4444;         /* red */
+        --background: #f1f5f9;     /* light gray */
+        --card: #ffffff;
+        --text: #1f2933;
+        --muted: #6b7280;
+    }
+
+
+
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+
+    body {
+        margin: 0;
+        background: linear-gradient(
+                135deg,
+                #e0e7ff 0%,
+                #f8fafc 60%
+        );
+        color: var(--text);
+    }
+
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .card {
+        background: var(--card);
+        padding: 2.5rem;
+        border-radius: 18px;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.12);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 35px 80px rgba(0,0,0,0.18);
+    }
+
+
+h1 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--primary);
+}
+
+    h1 {
+        font-size: 1.8rem;
+        letter-spacing: -0.5px;
+        color: var(--primary);
+    }
+
+    label {
+        font-size: 0.9rem;
+        color: var(--muted);
+    }
+
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+
+input {
+    width: 100%;
+    padding: 0.7rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+}
+
+    button {
+        background: linear-gradient(
+                135deg,
+                var(--primary-light),
+                var(--primary)
+        );
+        color: white;
+        font-weight: 600;
+        border: none;
+        border-radius: 10px;
+        padding: 0.8rem;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+    }
+
+    .room-status.available {
+        color: var(--secondary);
+        font-weight: 600;
+    }
+
+    .room-status.unavailable {
+        color: var(--danger);
+        font-weight: 600;
+    }
+
+    .room.unavailable {
+        opacity: 0.55;
+        pointer-events: none;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .card {
+        animation: fadeIn 0.4s ease-out;
+    }
+
